@@ -1,0 +1,259 @@
+{
+	"info": {
+		"_postman_id": "c706f7dc-3ea3-42e6-98d9-5af97c41fc27",
+		"name": "LinkMobility",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "4142414"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/login"
+			},
+			"response": []
+		},
+		{
+			"name": "TestExeption",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authorization_token}}",
+						"type": "text"
+					}
+				],
+				"url": "localhost:8080/api/testexeption"
+			},
+			"response": []
+		},
+		{
+			"name": "AddUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"tekk\",\r\n    \"password\": \"12\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/adduser"
+			},
+			"response": []
+		},
+		{
+			"name": "Add Project",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authorization_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"testTitle\",\r\n    \"status\": \"inprogress\",\r\n    \"duration\": \"test Duration\",\r\n    \"client\": \"test client\",\r\n    \"company\": \"test company\",\r\n    \"tasks\": [\r\n        {\r\n            \"name\": \"test task2223\"\r\n        },\r\n        {\r\n            \"name\": \"test task422\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/project"
+			},
+			"response": []
+		},
+		{
+			"name": "Add Task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authorization_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"test tassskk\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/task"
+			},
+			"response": []
+		},
+		{
+			"name": "EditProject",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authorization_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"testTitle\",\r\n    \"description\": \"test description\",\r\n    \"duration\": \"test Durationoooooooo\",\r\n    \"status\":\"inprogress\",\r\n    \"company\": \"dsas\",\r\n    \"tasks\": [\r\n        {\r\n            \"name\": \"test task77\"\r\n        },\r\n        {\r\n            \"name\": \"test task737\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/project/042e09d5-7cee-417a-8731-70edea21aeab"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Project",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authorization_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"testTitle\",\r\n    \"description\": \"test description\",\r\n    \"status\":\"test Status\",\r\n    \"duration\": \"test Duration\",\r\n    \"client\":\"test client\",\r\n    \"company\":\"test company\",\r\n    \"tasks\":[{\"name\":\"test taskewqw\"}]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/project/"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Projects",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authorization_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/projects"
+			},
+			"response": []
+		},
+		{
+			"name": "Soft Remove Project",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authorization_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/project/154f4966-3c0f-4d1f-8a43-e0b52a7e3fbb"
+			},
+			"response": []
+		},
+		{
+			"name": "Soft Remove Task",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authorization_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/task/154f4966-3c0f-4d1f-8a43-e0b52a7e3fbb"
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Task",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authorization_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"test tasssskkk\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/task/15b8a1d0-19fa-46f4-87b2-5e3bfd5aba79"
+			},
+			"response": []
+		}
+	]
+}

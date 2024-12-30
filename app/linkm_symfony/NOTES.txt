@@ -1,0 +1,20 @@
+Commands Used:
+composer create-project symfony/skeleton linkm_symfony "5.4.*"
+composer require doctrine/orm:^2.0
+composer require symfony/maker-bundle --dev
+composer require symfony/routing doctrine/annotations
+composer require lexik/jwt-authentication-bundle
+composer require symfony/security-bundle
+composer require security
+composer require orm
+mkdir -p config/jwt
+php bin/console lexik:jwt:generate-keypair
+mkdir /var/cache/symfony
+php bin/console make:entity Project
+php bin/console make:entity Task
+php bin/console make:controller ProjectController
+php bin/console make:controller TaskController
+
+
+# command: sh -c "while ! nc -z db 3306; do sleep 1; done && php /var/www/html/linkm_symfony/bin/console doctrine:migrations:migrate --no-interaction && php-fpm"
+RUN apt-get update && apt-get upgrade && apt-get install -y vim git unzip netcat-traditional 

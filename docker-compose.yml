@@ -1,0 +1,45 @@
+version: "1.0.0"
+
+services:
+    php:
+        build: ./docker/php
+        volumes:
+            - ./app:/var/www/html
+        environment:
+            APP_ENV: dev
+        working_dir: /var/www/html/linkm_symfony
+        networks:
+            - backend
+        depends_on:
+            - db
+    nginx:
+        build: ./docker/nginx
+        ports:
+            - 8080:80
+        volumes:
+            - ./app:/var/www/html
+        depends_on:
+            - php
+        networks:
+            - backend
+        restart: always
+        tty: true
+
+    db:
+        image: mysql:8.0
+        container_name: symfony_db
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        ports:
+            - ${MYSQL_PORT}:3306
+        volumes:
+            - ./docker/mysql/db_data:/var/lib/mysql
+        networks:
+            - backend
+
+networks:
+    backend:
+        driver: ${NETWORKS_DRIVER}
