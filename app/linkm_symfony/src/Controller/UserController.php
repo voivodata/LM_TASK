@@ -30,7 +30,7 @@ class UserController extends AbstractController
     }
 
 
-    #[Route('/adduser', name: 'add_user', methods: ['POST'])]
+    #[Route('/user', name: 'add_user', methods: ['POST'])]
     public function addUser(
         Request $request,
     ): JsonResponse {

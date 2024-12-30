@@ -41,6 +41,22 @@ php bin/console lexik:jwt:generate-keypair
 
 Only dev environment
 
+##Routing info
+
+| Name                | Method | Path              |
+| ------------------- | ------ | ----------------- |
+| add_project         | POST   | /api/project      |
+| soft_delete_project | DELETE | /api/project/{id} |
+| get_projects        | GET    | /api/projects     |
+| get_project         | GET    | /api/project/{id} |
+| edit_project        | PUT    | /api/project/{id} |
+| edit_task           | PUT    | /api/task/{id}    |
+| soft_delete_task    | DELETE | /api/task/{id}    |
+| create_task         | POST   | /api/task/{id}    |
+| login               | POST   | /api/login        |
+| test_exeption       | GET    | /api/testexeption |
+| add_user            | POST   | /api/user         |
+
 ## How to test
 
 Use postman app with following enviroment and collection
