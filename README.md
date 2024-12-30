@@ -16,6 +16,12 @@ Application uses following technologies:
 
 ## Installation
 
+In main folder run
+
+```sh
+docker compose up -d
+```
+
 with
 
 ```sh
@@ -41,7 +47,7 @@ php bin/console lexik:jwt:generate-keypair
 
 Only dev environment
 
-##Routing info
+## Routing info
 
 | Name                | Method | Path              |
 | ------------------- | ------ | ----------------- |
