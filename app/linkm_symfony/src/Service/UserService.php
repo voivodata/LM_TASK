@@ -26,9 +26,9 @@ class UserService
     }
 
     // Create a new user
-    public function createUser($jsonContent): JsonResponse
+    public function createUser($user): User
     {
-        $user = $this->serializer->deserialize($jsonContent, User::class, 'json');
+
         $errors = $this->validator->validate($user);
         $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword());
         $user->setPassword($hashedPassword);
@@ -38,15 +38,11 @@ class UserService
             foreach ($errors as $error) {
                 $errorMessages[] = $error->getMessage();
             }
-            return new JsonResponse(['message' => $errorMessages], Response::HTTP_BAD_REQUEST);
+            throw new \Exception(implode(",", $errorMessages), Response::HTTP_BAD_REQUEST);
         }
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        if ($user->getId()) {
-            return new JsonResponse(['message' => 'User created successfully'], Response::HTTP_CREATED);
-        } else {
-            return new JsonResponse(['message' => 'Project creation failed: No ID generated.'], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return $user;
     }
 }

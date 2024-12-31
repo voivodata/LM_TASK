@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Entity\Project;
 use App\Entity\Task;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -24,10 +23,9 @@ class TaskService
     }
 
     //Add task
-    public function createTask($id, $jsonContent): JsonResponse
+    public function createTask($id, $task): Task
     {
         $project = $this->entityManager->getRepository(Project::class)->find($id);
-        $task = $this->serializer->deserialize($jsonContent, Task::class, 'json');
         $task->setProject($project);
         $errors = $this->validator->validate($task);
         if (count($errors) > 0) {
@@ -35,28 +33,21 @@ class TaskService
             foreach ($errors as $error) {
                 $errorMessages[] = $error->getMessage();
             }
-            return new JsonResponse(['message' => $errorMessages], Response::HTTP_BAD_REQUEST);
+            throw new \Exception(implode(",", $errorMessages), Response::HTTP_BAD_REQUEST);
         }
         $this->entityManager->persist($task);
         $this->entityManager->flush();
-
-        if ($task->getId()) {
-            return new JsonResponse(['message' => 'Task created successfully with ID: ' . $task->getId()], Response::HTTP_OK);
-        } else {
-            return new JsonResponse(['message' => 'Task creation failed: No ID generated.'], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return $task;
     }
     // Edit task 
-    public function updateTask($id, $jsonContent): JsonResponse
+    public function updateTask($id, $updatedTask): Task
     {
 
         $task = $this->entityManager->getRepository(Task::class)->find($id);
 
-        if ($task === null) {
-            return new JsonResponse(['message' => 'Task not found'], Response::HTTP_NOT_FOUND);
+        if (!$task) {
+            throw new \Exception('Task not found', Response::HTTP_NOT_FOUND);
         }
-
-        $updatedTask = $this->serializer->deserialize($jsonContent, Task::class, 'json');
 
         $task->setName($updatedTask->getName());
 
@@ -66,24 +57,22 @@ class TaskService
             foreach ($errors as $error) {
                 $errorMessages[] = $error->getMessage();
             }
-            return new JsonResponse(['message' => $errorMessages], Response::HTTP_BAD_REQUEST);
+            throw new \Exception(implode(",", $errorMessages), Response::HTTP_BAD_REQUEST);
         }
         $this->entityManager->persist($task);
         $this->entityManager->flush();
-
-        return new JsonResponse(['message' => 'Task edited successfully with ID: ' . $task->getId()], Response::HTTP_OK);
+        return $task;
     }
     // Delete task 
-    public function softDeleteTask($id): JsonResponse
+    public function softDeleteTask($id): bool
     {
 
         $task = $this->entityManager->getRepository(Task::class)->find($id);
         if (!$task) {
-            return new JsonResponse(['message' => 'Task not found'], Response::HTTP_NOT_FOUND);
+            return false;
         }
         $task->setDeletedAt(new \DateTimeImmutable());
-
         $this->entityManager->flush();
-        return new JsonResponse(['message' => 'Task deleted successfully'], Response::HTTP_OK);
+        return true;
     }
 }

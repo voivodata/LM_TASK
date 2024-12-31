@@ -2,20 +2,24 @@
 
 namespace App\Controller;
 
+use App\Entity\Task;
 use App\Service\TaskService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class TaskController extends AbstractController
 {
     private $taskService;
+    private $serializer;
 
-    public function __construct(TaskService $taskService)
+    public function __construct(TaskService $taskService, SerializerInterface $serializer)
     {
         $this->taskService = $taskService;
+        $this->serializer = $serializer;
     }
 
     #[Route('/task/{id}', name: 'edit_task',  methods: ['PUT'])]
@@ -24,16 +28,15 @@ class TaskController extends AbstractController
         try {
 
             if (!\Ramsey\Uuid\Guid\Guid::isValid($id)) {
-                return new JsonResponse(['message' => 'No propper id format'], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(['message' => 'No propper id format'], Response::HTTP_OK);
             }
 
             $jsonContent = $request->getContent();
-
-            return $this->taskService->updateTask($id, $jsonContent);
-
+            $updatedTask = $this->serializer->deserialize($jsonContent, Task::class, 'json');
+            $task = $this->taskService->updateTask($id, $updatedTask);
             return new JsonResponse(['message' => 'Task edited successfully with ID: ' . $task->getId()], Response::HTTP_OK);
         } catch (\Exception $e) {
-            return new JsonResponse(['message' => 'Task edit failed: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw new \Exception('Task edit failed: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -43,11 +46,15 @@ class TaskController extends AbstractController
     {
         try {
             if (!\Ramsey\Uuid\Guid\Guid::isValid($id)) {
-                return new JsonResponse(['message' => 'No propper id format'], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(['message' => 'No propper id format'], Response::HTTP_OK);
             }
-            return $this->taskService->softDeleteTask($id);
+            if ($this->taskService->softDeleteTask($id)) {
+                return new JsonResponse(['message' => 'Task deleted successfully'], Response::HTTP_OK);
+            } else {
+                throw new \Exception('Task not found', Response::HTTP_NOT_FOUND);
+            }
         } catch (\Exception $e) {
-            return new JsonResponse(['message' => 'Remove Task failed: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw new \Exception('Task edit failed: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -56,12 +63,17 @@ class TaskController extends AbstractController
     {
         try {
             if (!\Ramsey\Uuid\Guid\Guid::isValid($id)) {
-                return new JsonResponse(['message' => 'No propper project id format'], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(['message' => 'No propper project id format'], Response::HTTP_OK);
             }
             $jsonContent = $request->getContent();
-            return $this->taskService->createTask($id, $jsonContent);
+            $task = $this->serializer->deserialize($jsonContent, Task::class, 'json');
+            if ($this->taskService->createTask($id, $task)->getId()) {
+                return new JsonResponse(['message' => 'Task created successfully with ID: ' . $task->getId()], Response::HTTP_OK);
+            } else {
+                throw new \Exception('Task creation failed: No ID generated.', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
         } catch (\Exception $e) {
-            return new JsonResponse(['message' => 'Remove Task failed: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw new \Exception('Remove Task failed: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

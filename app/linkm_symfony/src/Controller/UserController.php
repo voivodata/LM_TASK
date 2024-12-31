@@ -7,17 +7,18 @@ use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
 {
     private $userService;
-    public function __construct(UserService $userService)
+    private $serializer;
+    public function __construct(UserService $userService, SerializerInterface $serializer)
     {
         $this->userService = $userService;
+        $this->serializer = $serializer;
     }
 
     #[Route('/login', name: 'login', methods: ['POST'])]
@@ -36,9 +37,14 @@ class UserController extends AbstractController
     ): JsonResponse {
         try {
             $jsonContent = $request->getContent();
-            return $this->userService->createUser($jsonContent);
+            $user = $this->serializer->deserialize($jsonContent, User::class, 'json');
+            if ($this->userService->createUser($user)->getId()) {
+                return new JsonResponse(['message' => 'User created successfully'], Response::HTTP_CREATED);
+            } else {
+                throw new \Exception('Project creation failed: No ID generated.', Response::HTTP_BAD_REQUEST);
+            }
         } catch (\Exception $e) {
-            return new JsonResponse(['message' => 'User create failed: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw new \Exception('User create failed: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

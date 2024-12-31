@@ -19,6 +19,7 @@ class ExceptionListener
             'message' => $exception->getMessage(),
         ], Response::HTTP_OK);
         $event->allowCustomResponseCode();
+        $response->headers->set('X-LM-Header', 'error');
         $event->setResponse($response);
     }
 }
