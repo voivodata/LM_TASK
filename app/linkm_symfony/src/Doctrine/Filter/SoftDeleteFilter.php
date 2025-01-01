@@ -7,6 +7,9 @@ use Doctrine\ORM\Query\Filter\SQLFilter;
 
 class SoftDeleteFilter extends SQLFilter
 {
+    /**
+     * @return string
+     */
     public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
     {
         if ($targetEntity->hasField('deletedAt')) {

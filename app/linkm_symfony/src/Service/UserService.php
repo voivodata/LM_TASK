@@ -32,7 +32,7 @@ class UserService
         $errors = $this->validator->validate($user);
         $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword());
         $user->setPassword($hashedPassword);
-
+        $user->setRoles(['ROLE_USER']);
         if (count($errors) > 0) {
             $errorMessages = [];
             foreach ($errors as $error) {

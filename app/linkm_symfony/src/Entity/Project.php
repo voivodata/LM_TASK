@@ -49,7 +49,7 @@ class Project
     private ?string $company = null;
 
     #[Assert\Callback]
-    public function validate(ExecutionContextInterface $context, $payload)
+    public function validate(ExecutionContextInterface $context)
     {
         if (null === $this->getCompany() && null === $this->getClient())
             $context->buildViolation('company or client are required')

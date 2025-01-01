@@ -4,14 +4,13 @@ namespace App\Service;
 
 use App\Entity\Project;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProjectService
 {
-    private $entityManager;
-    private $validator;
+    private EntityManagerInterface $entityManager;
+    private ValidatorInterface  $validator;
 
     public function __construct(EntityManagerInterface $entityManager, ValidatorInterface $validator)
     {

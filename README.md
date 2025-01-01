@@ -71,3 +71,11 @@ Use postman app with following enviroment and collection
 LinkM.postman_environment.json
 LinkMobility.postman_collection.json
 ```
+
+## Unit test
+
+run sample tests with
+
+```sh
+php bin/phpunit
+```

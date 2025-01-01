@@ -5,8 +5,6 @@ services:
         build: ./docker/php
         volumes:
             - ./app:/var/www/html
-        environment:
-            APP_ENV: dev
         working_dir: /var/www/html/linkm_symfony
         networks:
             - backend
