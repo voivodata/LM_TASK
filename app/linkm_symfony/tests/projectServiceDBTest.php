@@ -6,8 +6,9 @@ use App\Entity\Project;
 use App\Entity\Task;
 use App\Enum\ProjectStatus;
 use App\Service\ProjectService;
-use App\Tests\DatabasePrimer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 
 class ProjectServiceDBTest extends KernelTestCase
 {
@@ -16,14 +17,36 @@ class ProjectServiceDBTest extends KernelTestCase
     private $entityManager;
     private $projectService;
 
+    public static function setUpBeforeClass(): void
+    {
+        self::bootKernel();
+        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application(self::$kernel);
+
+        $application->setAutoExit(false);
+
+        $output = new NullOutput();
+
+        $inputCreate = new ArrayInput([
+            'command' => 'doctrine:database:create',
+            '--no-interaction' => true,
+        ]);
+
+        $application->run($inputCreate, $output);
+    }
+
     protected function setUp(): void
     {
-
-        $kernel = self::bootKernel();
-        DatabasePrimer::prime($kernel);
-        $this->entityManager = $kernel->getContainer()->get('doctrine')->getManager();
-        $this->validator = $kernel->getContainer()->get('validator');
+        self::bootKernel();
+        $this->entityManager = self::$kernel->getContainer()->get('doctrine')->getManager();
+        $this->validator = self::$kernel->getContainer()->get('validator');
         $this->projectService = new ProjectService($this->entityManager, $this->validator);
+
+        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application(self::$kernel);
+        $output = new NullOutput();
+        $command = $application->find('doctrine:schema:create');
+        $command->run(new \Symfony\Component\Console\Input\ArrayInput([
+            'command' => 'doctrine:schema:create',
+        ]), $output);
     }
 
     public function testCreateProjectDB(): void
@@ -123,5 +146,20 @@ class ProjectServiceDBTest extends KernelTestCase
         $this->entityManager->flush();
         $getProjectArray = $this->projectService->getProjects();
         $this->assertEquals('test Get Projects', $getProjectArray[0]->getTitle());
+    }
+
+    protected function tearDown(): void
+    {
+        self::bootKernel();
+
+        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application(self::$kernel);
+
+        $output = new NullOutput();
+        $command = $application->find('doctrine:schema:drop');
+        $input = new \Symfony\Component\Console\Input\ArrayInput([
+            'command' => 'doctrine:schema:drop',
+            '--force' => true, // --force will actually drop the schema without confirmation
+        ]);
+        $command->run($input, $output);
     }
 }

@@ -5,20 +5,17 @@ namespace App\Service;
 use App\Entity\Project;
 use App\Entity\Task;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TaskService
 {
     private $entityManager;
-    private $serializer;
     private $validator;
 
-    public function __construct(EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function __construct(EntityManagerInterface $entityManager,  ValidatorInterface $validator)
     {
         $this->entityManager = $entityManager;
-        $this->serializer = $serializer;
         $this->validator = $validator;
     }
 

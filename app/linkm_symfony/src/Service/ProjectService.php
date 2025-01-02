@@ -9,8 +9,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProjectService
 {
-    private EntityManagerInterface $entityManager;
-    private ValidatorInterface  $validator;
+    private  $entityManager;
+    private  $validator;
 
     public function __construct(EntityManagerInterface $entityManager, ValidatorInterface $validator)
     {

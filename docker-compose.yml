@@ -10,6 +10,7 @@ services:
             - backend
         depends_on:
             - db
+            - testdb
     nginx:
         build: ./docker/nginx
         ports:
@@ -25,7 +26,7 @@ services:
 
     db:
         image: mysql:8.0
-        container_name: symfony_db
+        container_name: db
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -35,6 +36,19 @@ services:
             - ${MYSQL_PORT}:3306
         volumes:
             - ./docker/mysql/db_data:/var/lib/mysql
+        networks:
+            - backend
+
+    testdb:
+        image: mysql:8.0
+        container_name: testdb
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_TEST_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        ports:
+            - ${MYSQL_TEST_PORT}:3306
         networks:
             - backend
 

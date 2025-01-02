@@ -13,14 +13,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserService
 {
     private $entityManager;
-    private $serializer;
     private $validator;
     private $passwordHasher;
 
-    public function __construct(EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator, UserPasswordHasherInterface $passwordHasher)
+    public function __construct(EntityManagerInterface $entityManager, ValidatorInterface $validator, UserPasswordHasherInterface $passwordHasher)
     {
         $this->entityManager = $entityManager;
-        $this->serializer = $serializer;
         $this->validator = $validator;
         $this->passwordHasher = $passwordHasher;
     }
