@@ -72,9 +72,9 @@ LinkM.postman_environment.json
 LinkMobility.postman_collection.json
 ```
 
-## Unit test
+## Unit and functional testing
 
-run sample tests with
+run all sample tests with
 
 ```sh
 php bin/phpunit
